@@ -1,0 +1,49 @@
+{% extends 'merchant_dashboard/base.html' %} {% load static %} 
+{% block extracss %}
+<!-- DateTime Picker -->
+<link href="{% static 'adminLTE/plugins/bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" type="text/css" /> 
+<style type="text/css">
+.distance-panel {
+	line-height: 30px;
+	margin-bottom: 10px;
+	padding: 5px;
+}
+.googleDistanceMatrixMap {
+	height: 400px;
+	width: 100%;
+}
+</style>
+{% endblock %} 
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		Dashboard
+		<small>Version 2.0</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="{% url 'merchant_dashboard:index' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+		<li class="active">Help</li>
+	</ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+	<div class="row">
+		<h3 class="text-center">Coming Soon!</h3>
+	</div>
+</section>
+<!-- /.content -->
+{% endblock %} 
+{% block extrajs %}
+	<!-- momentjs  -->
+	<script src="{% static 'adminLTE/plugins/moment/min/moment.min.js' %}" type="text/javascript"></script>
+	<!-- datetimepicker -->
+	<script src="{% static 'adminLTE/plugins/bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js' %}" type="text/javascript"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<!-- Bootstrap Growl like notifications -->
+	<script src="{% static 'adminLTE/plugins/bootstrap-notify/bootstrap-notify.min.js' %}" type="text/javascript"></script>
+
+{% endblock %}

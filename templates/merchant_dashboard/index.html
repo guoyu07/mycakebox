@@ -1,0 +1,518 @@
+{% extends 'merchant_dashboard/base.html' %} {% load static %} 
+{% block extracss %}
+<!-- DateTime Picker -->
+<link href="{% static 'adminLTE/plugins/bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" type="text/css" /> 
+<style type="text/css">
+.distance-panel {
+  line-height: 30px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+.googleDistanceMatrixMap {
+  height: 400px;
+  width: 100%;
+
+}
+</style>
+{% endblock %} 
+
+{% block content %}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Dashboard
+        <small>Version 2.0</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Info boxes -->
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="glyphicon glyphicon-plus-sign"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Bookings</span>
+                    <span class="info-box-number">{{ total_bookings_count }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="glyphicon glyphicon-copy"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Upcoming Bookings </span>
+                    <span class="info-box-number">{{ upcoming_bookings_count }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-paste"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Complete Bookings</span>
+                    <span class="info-box-number">{{ total_bookings_count }}</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="glyphicon glyphicon-piggy-bank"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Wallet</span>
+                    <span class="info-box-number">&#8377; 2,000</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
+    <!-- Main row -->
+    <div class="row">
+        <!-- Left col -->
+        <div class="col-md-8">
+        		<div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Quick Book</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+				</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown">
+					<i class="fa fa-wrench"></i></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <form id="merchantBookDeliveryForm" role="form" action="{% url 'merchant_dashboard:book_delivery' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Cost of Cake&nbsp;*</label>
+                                        <input type="hidden" id="bookingID" name="booking_id">
+                                        <input type="text" name="cost_of_cake" class="form-control" required="required">
+
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Weight of Cake</label>
+                                        <select class="form-control" name="weight_of_cake">
+							  <option value="0.5 Kg ">0.5 Kg</option>
+							  <option value="1 Kg ">1 Kg</option>
+							  <option value="1.5 Kg ">1.5 Kg</option>
+							  <option value="2 Kg or more">2 Kg or more</option>
+							</select>
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                            <!-- ./row -->
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                                    <a href="#" data-target="#selectCustomerModal" data-toggle="modal" class="btn btn-froly btn-sm">Select Exisiting Customer</a>
+                                </div>
+                            </div>
+                            <!-- ./row -->
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Pick-up Date&nbsp;*</label>
+                                        <input id="pickupDateTimeInput" type="name" name="pickup_date" class="form-control" required="required">
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Drop Date&nbsp;*</label>
+                                        <input id="dropDateTimeInput" type="name" name="drop_date" class="form-control" required="required">
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                            <!-- ./row -->
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Customer's First Name&nbsp;*</label>
+                                        <input id="customerFirstNameInput" type="name" name="customer_first_name" class="form-control" required="required">
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Customer's Last Name&nbsp;*</label>
+                                        <input id="customerLastNameInput" type="name" name="customer_last_name" class="form-control" required="required">
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                            <!-- ./row -->
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Customer's Phone&nbsp;*</label>
+                                        <input id="customerPhoneInput" type="text" name="customer_phone" class="form-control" required="required">
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Customer's Alt Phone</label>
+                                        <input type="text" name="customer_alt_phone" class="form-control">
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                            <!-- .row -->
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Customer's Address&nbsp;*</label>
+                                        <input id="customerAddressInput" type="address" id="customer_address" class="form-control" name="customer_address" required="required">
+                                    </div>
+                                    <!-- ./form-group -->
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Locality&nbsp;*</label>
+                                        <input id="customerLocalityInput" type="text" class="form-control" placeholder="Enter your address" name="customer_locality" required="required">
+                                    </div>
+                                    <!-- ./form-group -->
+
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                            <!-- .row -->
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Instructions</label>
+                                        <textarea rows="2" class="form-control" name="instruction"></textarea>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
+                            </div>
+                            <!-- row -->
+                        </div>
+                        <!-- ./box-body -->
+                        <div class="box-footer">
+                            <!-- <a href="#" class="btn btn-danger pull-right" id="getDeliveryDetails" data-toggle="modal" data-target="#deliveryBookingConfirmation">Book</a>       -->
+                            <input type="submit" class="btn btn-default btn-flat pull-right" value="Book Now">
+                        </div>
+                        <!-- .box-footer -->
+                    </form>
+                </div>
+                <!-- ./box-body -->
+            </div>
+            <!-- /.box -->
+            <div class="box box-primary">
+                  	<div class="box-header with-border">
+	                  	<i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
+	                  	<h3 class="box-title">Check Distance of Locality</h3>
+		                <div class="box-btn-tools pull-right">
+		                	<button class="btn btn-box-tool" type="button" data-widget="collapse">
+		                  		<i class="fa fa-minus" aria-hidden="true"></i>
+		                	</button>
+	                  
+		                </div>
+	                </div><!-- ./ box-header --> 
+	                <div class="box-body" style="height:100%; width:100%;">
+	                	<div class="floating-panel" id="floating-panel">
+						</div>
+						<div class="distance-panel" id="distance-panel">
+							<div class="row">
+								<div class="col-xs-12 col-md-6 col-sm-6">
+									<input id="destinationLocalityInput" type="text" placeholder="Enter Locality to Search" class="form-control">
+								</div>
+								<div class="col-xs-12 col-md-6 col-sm-6">
+									<button id="calculateDistanceBtn" class="btn btn-flat btn-primary">Calculate Distance</button>
+								</div>
+							</div>
+						  	<ul class="nav nav-pills nav-stacked">
+							    <li><b>Origin:</b> <span id="origin"></span></li>
+							    <li><b>Destination:</b> <span id="destination"></span></li>
+							    <li><b>Distance:</b> <span id="distance"></span></li>
+							    <li><b>Duration:</b> <span id="duration"></span></li>
+						  	</ul>
+						</div>
+	                	<div class="googleDistanceMatrixMap" id="googleDistanceMatrixMap"></div>
+            		</div>
+        	</div>
+            <!-- /.box -->
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Info Boxes Style 2 -->
+            <div class="info-box bg-green">
+                <span class="info-box-icon"><i class="fa fa-tag"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Positive Reviews</span>
+                    <span class="info-box-number">5,200</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 50%"></div>
+                    </div>
+                    <span class="progress-description">
+					50% Increase in 30 Days
+				  </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            <div class="info-box bg-yellow">
+                <span class="info-box-icon"><i class="fa fa-heart"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Moderate Reviews</span>
+                    <span class="info-box-number">92,050</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 20%"></div>
+                    </div>
+                    <span class="progress-description">
+					20% Increase in 30 Days
+				  </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            <div class="info-box bg-red">
+                <span class="info-box-icon"><i class="fa fa-arrow-down"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Negative</span>
+                    <span class="info-box-number">114,381</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 70%"></div>
+                    </div>
+                    <span class="progress-description">
+					70% Increase in 30 Days
+				  </span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+            <div class="info-box bg-aqua">
+                <span class="info-box-icon"><i class="fa fa-send"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Reviews Replied</span>
+                    <span class="info-box-number">163,921</span>
+
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 40%"></div>
+                    </div>
+                    <span class="progress-description">
+					40% Increase in 30 Days
+				</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-md-6">
+                    <!-- USERS LIST -->
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Latest Customers</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+					</button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+					</button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding">
+                            <ul class="users-list clearfix">
+                                {% for item in recent_customer_list %}
+                                <li>
+                                    <img src="http://via.placeholder.com/128x128" alt="User Image">
+                                    <a class="users-list-name" href="#" title="{{ item.get_full_name }}">{{ item.get_full_name }}</a>
+                                    <span class="users-list-date">{{ item.phone_number }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <!-- /.users-list -->
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer text-center">
+                            <a href="javascript:void(0)" class="text-red">View All Users</a>
+                        </div>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!--/.box -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+
+        </div>
+        <!-- /.col -->
+
+        <div class="col-md-4">
+        	<div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Latest Bookings</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+				</button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">  
+                  {% if upcoming_bookings %}
+                    <ul class="list-group list-group-unbordered">
+                      {% for item in upcoming_bookings %}
+                          <li class="list-group-item">
+                          	<div class="row text-center">
+                          		<div class="col-md-3"><b>Booking ID</b></div>
+                          		<div class="col-md-3"><b>Customer</b></div>
+                          		<div class="col-md-3"><b>Pickup DateTime</b></div>
+                          		<div class="col-md-3"><b>Rider</b></div>
+                          	</div>
+                            <div class="row text-center">
+                              <div class="col-md-3">
+                                <a href="{{ item.get_absolute_url }}">{{ item }}</a>
+                                <br>
+                                <p class="text-warning">{{ item.status }}</p>
+                              </div>
+                              <div class="col-md-3">
+                                <a href="#">{{ item.customer.get_full_name }}</a>
+                              </div>
+                              <div class="col-md-3">
+                                <a href="#">{{ item.pickup_date }}</a>
+                              </div>
+                              <div class="col-md-3">
+                                <a href="#">{{ item.rider.get_full_name }}</a>
+                              </div>
+
+                            </div>
+                          </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    <h4 class="text-center">No Upcoming Bookings</h4>
+                  {% endif %}
+                                                    
+                  </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-right">View All Orders</a>
+                </div>
+                <!-- /.box-footer -->
+            </div>
+        	<div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Order Status Count</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+				</button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="pie-chart-container">
+                            </div>
+                            <!-- ./chart-responsive -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer no-padding">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> Confirmed <span class="pull-right">{{ total_confirmed_count }}</span></a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-circle-o text-green"></i> Complete <span class="pull-right">{{ total_complete_count }}</span></a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-circle-o text-gray"></i> Pending <span class="pull-right">{{ total_pending_count }}</span></a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Shipped <span class="pull-right">{{ total_shipped_count }}</span></a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Ready to Pick <span class="pull-right">{{ total_ready_to_pick_count }}</span></a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-circle-o text-red"></i> Cancelled <span class="pull-right">{{ total_cancelled_count }}</span></a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.footer -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+{% endblock %} 
+{% block extrajs %}
+<!-- momentjs  -->
+<script src="{% static 'adminLTE/plugins/moment/min/moment.min.js' %}" type="text/javascript"></script>
+<!-- datetimepicker -->
+<script src="{% static 'adminLTE/plugins/bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js' %}" type="text/javascript"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<!-- Bootstrap Growl like notifications -->
+<script src="{% static 'adminLTE/plugins/bootstrap-notify/bootstrap-notify.min.js' %}" type="text/javascript"></script>
+
+{% endblock %}
