@@ -1,1 +1,1 @@
-web: gunicorn rider_booking.wsgi --log-file -
+web: gunicorn mycakebox.wsgi --log-file -
