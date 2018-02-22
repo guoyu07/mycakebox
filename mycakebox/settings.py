@@ -34,45 +34,45 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rider',
-    'merchant',
-    'customer',
-    'booking',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'rider',
+	'merchant',
+	'customer',
+	'booking',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'mycakebox.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'mycakebox.context_processors.google_map_api'
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [os.path.join(BASE_DIR, 'templates')],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+				'mycakebox.context_processors.google_map_api'
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'mycakebox.wsgi.application'
@@ -83,55 +83,53 @@ WSGI_APPLICATION = 'mycakebox.wsgi.application'
 
 urlparse.uses_netloc.append("postgres")
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-    }
-}
+
 
 try:
-    if DATABASE_URL in os.environ:
-        db_url = urlparse.urlparse(os.environ["DATABASE_URL"])
-        conn = psycopg2.connect(
-            database=db_url.path[1:],
-            user=db_url.username,
-            password=db_url.password,
-            host=db_url.hostname,
-            port=db_url.port
-        )
-        DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
-        DATABASES['default'] =  dj_database_url.config()
-    else:
-        conn = psycopg2.connect(
-            database='mycakebox_db',
-            user='mcbdb_admin',
-            password='db@dmin123',
-            host='localhost',
-            port='5432'
-        )
-        DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
-        DATABASES['default'] =  dj_database_url.config()
+	if DATABASE_URL in os.environ:
+		db_url = urlparse.urlparse(os.environ["DATABASE_URL"])
+		DATABASES = {
+			'default': {
+				'ENGINE': 'django.db.backends.postgresql',
+				'NAME': db_url.path[1:],
+				'USER': db_url.username,
+				'PASSWORD': db_url.password,
+				'HOST': db_url.hostname,
+				'PORT': db_url.port,
+			}
+		}
+	else:
+		DATABASES = {
+			'default': {
+				'ENGINE': 'django.db.backends.postgresql',
+				'NAME': 'mycakebox_db',
+				'USER': 'mcbdb_admin',
+				'PASSWORD': 'db@dmin123',
+				'HOST': 'localhost',
+				'PORT': '5432',
+			}
+		}
 
 except Exception:
-    print 'Unexpected error:', sys.exc_info()
+	print 'Unexpected error:', sys.exc_info()
 
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 
@@ -162,8 +160,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "static_src", "media_root")
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static_src", "our_static"),
-    )
+	os.path.join(BASE_DIR, "static_src", "our_static"),
+	)
 
 DEFAULT_TAX_RATE = 0.01 #1%
 
