@@ -82,11 +82,8 @@ WSGI_APPLICATION = 'mycakebox.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 urlparse.uses_netloc.append("postgres")
-
-
-
 try:
-	if DATABASE_URL in os.environ:
+	if "DATABASE_URL" in os.environ:
 		db_url = urlparse.urlparse(os.environ["DATABASE_URL"])
 		DATABASES = {
 			'default': {
