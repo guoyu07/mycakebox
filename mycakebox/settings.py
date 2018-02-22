@@ -82,16 +82,22 @@ WSGI_APPLICATION = 'mycakebox.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 urlparse.uses_netloc.append("postgres")
-DATABASES = {}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+    }
+}
+
 try:
     if DATABASE_URL in os.environ:
-        url = urlparse.urlparse(os.environ["DATABASE_URL"])
+        db_url = urlparse.urlparse(os.environ["DATABASE_URL"])
         conn = psycopg2.connect(
-            database=url.path[1:],
-            user=url.username,
-            password=url.password,
-            host=url.hostname,
-            port=url.port
+            database=db_url.path[1:],
+            user=db_url.username,
+            password=db_url.password,
+            host=db_url.hostname,
+            port=db_url.port
         )
         DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
         DATABASES['default'] =  dj_database_url.config()
