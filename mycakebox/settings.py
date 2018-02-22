@@ -84,7 +84,6 @@ WSGI_APPLICATION = 'mycakebox.wsgi.application'
 urlparse.uses_netloc.append("postgres")
 DATABASES = {}
 try:
-    
     if DATABASE_URL in os.environ:
         url = urlparse.urlparse(os.environ["DATABASE_URL"])
         conn = psycopg2.connect(
@@ -94,8 +93,8 @@ try:
             host=url.hostname,
             port=url.port
         )
-        DATABASES['default'] =  dj_database_url.config()
         DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
+        DATABASES['default'] =  dj_database_url.config()
     else:
         conn = psycopg2.connect(
             database='mycakebox_db',
@@ -104,8 +103,8 @@ try:
             host='localhost',
             port='5432'
         )
-        DATABASES['default'] =  dj_database_url.config()
         DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
+        DATABASES['default'] =  dj_database_url.config()
 
 except Exception:
     print 'Unexpected error:', sys.exc_info()
