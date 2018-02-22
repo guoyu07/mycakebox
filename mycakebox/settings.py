@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import urlparse
+import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,8 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'we8&$2a__0w)pk*0+)n$w06#$y$lsc)peokv)=b2o4i08%49ba'
-
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -66,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'mycakebox.context_processors.google_map_api'
             ],
         },
     },
@@ -77,16 +79,33 @@ WSGI_APPLICATION = 'mycakebox.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mycakebox_db',
-        'USER': 'mcbdb_admin',
-        'PASSWORD': 'db@dmin123',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
+urlparse.uses_netloc.append("postgres")
+DATABASES = {}
+DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
+try:
+    
+    if DATABASE_URL in os.environ:
+        url = urlparse.urlparse(os.environ["DATABASE_URL"])
+        conn = psycopg2.connect(
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
+        DATABASES['default'] =  dj_database_url.config()
+    else:
+        conn = psycopg2.connect(
+            database='mycakebox_db',
+            user='mcbdb_admin',
+            password='db@dmin123',
+            host='localhost',
+            port='5432'
+        )
+        DATABASES['default'] =  dj_database_url.config()
+        
+except Exception:
+    print 'Unexpected error:', sys.exc_info()
 
 
 # Password validation
@@ -140,3 +159,4 @@ STATICFILES_DIRS = (
 
 DEFAULT_TAX_RATE = 0.01 #1%
 
+GOOGLE_MAPS_API = os.environ.get('GOOGLE_MAPS_API')
